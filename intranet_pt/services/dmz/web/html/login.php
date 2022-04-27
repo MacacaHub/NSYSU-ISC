@@ -1,7 +1,6 @@
 <?php
 session_start();
 include('connect.php');
-
 if(isset($_POST['username']) && isset($_POST['password'])) {
   $sql = "SELECT * FROM Users WHERE username = '" . $_POST['username'] . "' AND password = '" . $_POST['password'] . "'";
   $result = $conn->query($sql);

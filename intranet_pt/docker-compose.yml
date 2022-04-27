@@ -11,7 +11,7 @@ services:
     ports:
       - '0.0.0.0:80:80'
     volumes:
-      - /home/arikoi/isc/services/dmz/web/html:/var/www/html
+      - ./services/dmz/web/html:/var/www/html
     depends_on:
       - dmz_db
 
@@ -22,49 +22,49 @@ services:
         ipv4_address: 10.0.20.20
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - /home/arikoi/isc/services/dmz/db:/docker-entrypoint-initdb.d
+      - ./services/dmz/db:/docker-entrypoint-initdb.d
     environment:
       MYSQL_DATABASE: usersdb 
       MYSQL_USER: user_manager
       MYSQL_PASSWORD: user_manager_p@ssw0rd
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
 
-  dmz_kali:
-    build: ./services/dmz/kali
-    networks:
-      dmz:
-        ipv4_address: 10.0.20.50
-    environment:
-      - PUID=1000
-      - PGID=1000
-    ports:
-      - '0.0.0.0:9487:22'
-
-  dmz_vpn:
-    image: linuxserver/wireguard
-    networks:
-      dmz:
-    container_name: wireguard
-    cap_add:
-        - NET_ADMIN
-        - SYS_MODULE
-    environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/London
-        - SERVERPORT=51820
-        - PEERS=30 #optional
-        - PEERDNS=auto #optional
-        - INTERNAL_SUBNET=10.0.10.0 #optional
-        - ALLOWEDIPS=10.0.10.0/16 #optional
-    volumes:
-        - /lib/modules:/lib/modules
-        - /home/arikoi/isc/services/dmz/vpn/config:/config
-    ports:
-        - 51820:51820/udp
-    sysctls:
-        - net.ipv4.conf.all.src_valid_mark=1
-    restart: unless-stopped
+#  dmz_kali:
+#    build: ./services/dmz/kali
+#    networks:
+#      dmz:
+#        ipv4_address: 10.0.20.50
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#    ports:
+#      - '0.0.0.0:9487:22'
+#
+#  dmz_vpn:
+#    image: linuxserver/wireguard
+#    networks:
+#      dmz:
+#    container_name: wireguard
+#    cap_add:
+#        - NET_ADMIN
+#        - SYS_MODULE
+#    environment:
+#        - PUID=1000
+#        - PGID=1000
+#        - TZ=Europe/London
+#        - SERVERPORT=51820
+#        - PEERS=30 #optional
+#        - PEERDNS=auto #optional
+#        - INTERNAL_SUBNET=10.0.10.0 #optional
+#        - ALLOWEDIPS=10.0.10.0/16 #optional
+#    volumes:
+#        - /lib/modules:/lib/modules
+#        - /home/arikoi/isc/services/dmz/vpn/config:/config
+#    ports:
+#        - 51820:51820/udp
+#    sysctls:
+#        - net.ipv4.conf.all.src_valid_mark=1
+#    restart: unless-stopped
 
   of_sudo:
     build: ./services/office/sudo
